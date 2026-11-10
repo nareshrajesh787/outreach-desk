@@ -1,0 +1,16 @@
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1c1c1a;--mute:#6b6a64;--line:#e4e2da;--acc:#2f5d50;--warn:#a4552a;--bad:#a12d2d}
+@media(prefers-color-scheme:dark){:root{--bg:#161614;--card:#1f1f1c;--ink:#ecebe5;--mute:#9a988f;--line:#33332e;--acc:#7fb8a6;--warn:#d89a6a;--bad:#e07a7a}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}
+a{color:var(--acc)}nav{display:flex;gap:4px;flex-wrap:wrap;padding:12px 20px;border-bottom:1px solid var(--line);background:var(--card);align-items:center}
+nav a{padding:6px 12px;border-radius:8px;text-decoration:none;color:var(--ink)}nav a:hover{background:var(--bg)}nav b{margin-right:12px}
+main{max-width:1100px;margin:0 auto;padding:24px 20px}h1{font-size:22px;margin:0 0 4px}h2{font-size:16px;margin:28px 0 10px}
+.sub{color:var(--mute);margin:0 0 20px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}.card .n{font-size:26px;font-weight:600}.card .l{color:var(--mute);font-size:13px}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}th{color:var(--mute);font-weight:500;font-size:13px}tr:last-child td{border-bottom:0}
+.pill{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;border:1px solid var(--line);color:var(--mute)}
+.pill.ok{color:var(--acc);border-color:var(--acc)}.pill.warn{color:var(--warn);border-color:var(--warn)}.pill.bad{color:var(--bad);border-color:var(--bad)}
+.banner{padding:12px 16px;border-radius:12px;border:1px solid var(--warn);color:var(--warn);margin-bottom:16px;background:var(--card)}
+button,.btn{font:inherit;padding:6px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-block}
+button.primary{background:var(--acc);color:var(--bg);border-color:var(--acc)}input,textarea,select{font:inherit;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:100%}
+form.inline{display:inline}pre{white-space:pre-wrap;font:inherit;margin:0}.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.mute{color:var(--mute)}
