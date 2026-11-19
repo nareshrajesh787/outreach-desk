@@ -13,4 +13,4 @@ export type Email = {
   lead_name?: string; lead_org?: string; track?: Track;
 };
 export type Program = { id: number; name: string; org: string; url: string | null; deadline: string | null; paid: string; status: string; notes: string | null };
-export type Settings = { paused: boolean; pause_reason: string; cap_academia: number; cap_corporate: number; veto_hours: number };
+export type Settings = { paused: boolean; pause_reason: string; cap_academia: number; cap_corporate: number; veto_hours: number; last_run?: string };

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sql, saveSettings, logEvent } from "@/lib/db";
-// Body: {id, result: "sent"|"failed"|"bounced"|"replied", note?, reply_class?, reply_summary?}
 export async function POST(req: NextRequest) {
   if (req.headers.get("authorization") !== `Bearer ${process.env.SENDER_TOKEN}`) return new NextResponse("no", { status: 401 });
   const b = await req.json();
@@ -8,6 +7,8 @@ export async function POST(req: NextRequest) {
   if (b.result === "sent") {
     await sql()`UPDATE emails SET status='sent', sent_at=now() WHERE id=${id}`;
     await sql()`UPDATE leads SET status='contacted' WHERE id=(SELECT lead_id FROM emails WHERE id=${id})`;
+    const d = (await sql()`SELECT (now() AT TIME ZONE 'America/New_York')::date::text AS d`)[0].d as string;
+    await saveSettings({ last_run: d });
     await logEvent("send", `Email ${id} sent`);
   } else if (b.result === "replied") {
     await sql()`UPDATE emails SET status='replied', reply_class=${b.reply_class ?? "reply"}, reply_summary=${b.reply_summary ?? ""} WHERE id=${id}`;

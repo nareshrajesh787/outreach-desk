@@ -1,6 +1,9 @@
 {
   "crons": [
-    { "path": "/api/cron/research", "schedule": "0 11 * * 1-5" },
-    { "path": "/api/cron/draft", "schedule": "30 12 * * 1-5" }
+    { "path": "/api/cron/research?slot=0&slots=1&n=2", "schedule": "0 10 * * 1-5" },
+    { "path": "/api/cron/dossier?limit=10", "schedule": "0 11 * * 1-5" },
+    { "path": "/api/cron/draft?limit=10", "schedule": "30 14 * * 1-5" },
+    { "path": "/api/cron/programs", "schedule": "0 15 * * 1" },
+    { "path": "/api/cron/followup?limit=10", "schedule": "30 15 * * 1-5" }
   ]
 }
