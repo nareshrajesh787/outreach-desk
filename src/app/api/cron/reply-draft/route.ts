@@ -9,5 +9,5 @@ export async function GET(req: NextRequest) {
   const ok = (!!process.env.CRON_SECRET && a === `Bearer ${process.env.CRON_SECRET}`) || (!!process.env.SENDER_TOKEN && a === `Bearer ${process.env.SENDER_TOKEN}`);
   if (!ok) return new NextResponse("no", { status: 401 });
   if (!hasDb()) return NextResponse.json({ error: "no db" }, { status: 400 });
-  return NextResponse.json(await draftReplies());
+  return NextResponse.json(await draftReplies({ redo: req.nextUrl.searchParams.get("redo") === "1" }));
 }
