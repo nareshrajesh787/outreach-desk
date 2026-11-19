@@ -28,6 +28,22 @@ export async function setup() {
   await q`CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value JSONB)`;
   await q`CREATE TABLE IF NOT EXISTS events (id SERIAL PRIMARY KEY, at TIMESTAMPTZ DEFAULT now(), kind TEXT, message TEXT)`;
   await q`INSERT INTO settings (key, value) VALUES ('control', ${JSON.stringify(DEFAULT_SETTINGS)}::jsonb) ON CONFLICT DO NOTHING`;
+  await migrate();
+}
+
+// Reply threads: inbound messages live in `replies`; reply drafts are rows in `emails` with kind='reply'.
+// Safe to call often (IF NOT EXISTS); runs once per server instance.
+let migrated = false;
+export async function migrate() {
+  if (migrated || !hasDb()) return;
+  const q = sql();
+  await q`CREATE TABLE IF NOT EXISTS replies (
+    id SERIAL PRIMARY KEY, email_id INT REFERENCES emails(id) ON DELETE CASCADE, lead_id INT REFERENCES leads(id) ON DELETE CASCADE,
+    from_addr TEXT, subject TEXT, body TEXT, received_at TIMESTAMPTZ DEFAULT now(), reply_class TEXT, summary TEXT,
+    created_at TIMESTAMPTZ DEFAULT now(), UNIQUE (email_id, received_at))`;
+  await q`ALTER TABLE emails ADD COLUMN IF NOT EXISTS parent_id INT`;
+  await q`ALTER TABLE emails ADD COLUMN IF NOT EXISTS to_addr TEXT`;
+  migrated = true;
 }
 
 export async function getSettings(): Promise<Settings> {

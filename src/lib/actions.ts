@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { sql, hasDb, saveSettings, logEvent } from "@/lib/db";
 import { isAuthed } from "@/lib/auth";
+import { draftReplies } from "@/lib/replies";
 const guard = async () => { if (!(await isAuthed()) && (process.env.APP_PASSWORD || process.env.NODE_ENV === "production")) throw new Error("auth"); if (!hasDb()) throw new Error("no db"); };
 
 // Sets one email's status. 'queued' means approved and ready for the next morning send.
@@ -28,6 +29,8 @@ async function review(fd: FormData, status: string) {
   await sql()`UPDATE emails SET subject=${String(fd.get("subject") ?? "")}, body=${String(fd.get("body") ?? "")} WHERE id=${id}`;
   if (status) await put(id, status);
   revalidatePath("/", "layout");
+  // Reply drafts edited from a conversation on the Replies page return there.
+  if (tab === "replies") redirect(`/replies?id=${String(fd.get("thread") ?? "")}` + (status ? "" : "&saved=1"));
   if (status) {
     let next: { id: number } | undefined;
     if (tab === "review") {
@@ -90,3 +93,11 @@ export async function togglePause(fd: FormData) {
   revalidatePath("/", "layout");
 }
 export async function signOut() { (await cookies()).delete("od"); redirect("/login"); }
+
+// Replies page: draft (or redraft) an answer to one inbound message.
+export async function draftReplyNow(fd: FormData) {
+  await guard();
+  await draftReplies({ replyId: Number(fd.get("reply_id")) });
+  revalidatePath("/", "layout");
+  redirect(`/replies?id=${String(fd.get("thread") ?? "")}`);
+}

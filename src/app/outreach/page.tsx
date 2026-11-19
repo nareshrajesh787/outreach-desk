@@ -15,7 +15,7 @@ export default async function Outreach({ searchParams }: { searchParams: Promise
   const editable = sel && !["sent", "bounced"].includes(sel.status);
   return (<>
     <h1>Outreach</h1>
-    <p className="sub">Review at night. Approved emails send the next weekday morning, and you can still hold one until then.</p>
+    <p className="sub">Review at night. Approved emails and replies send the next weekday morning, and you can still hold one until then.</p>
     <div className="chips">{TABS.map(([k, name, st]) => <Link key={k} className={"chip" + (cur[0] === k ? " on" : "")} href={`/outreach?tab=${k}`}>{name} {count(st)}</Link>)}</div>
     {!sel ? <div className="card"><p className="mute" style={{ margin: 0 }}>{cur[0] === "review" ? "Nothing to review. New drafts show up here after the morning draft run." : "No emails here yet."}</p></div> :
     <div className="split">
@@ -23,7 +23,7 @@ export default async function Outreach({ searchParams }: { searchParams: Promise
         {list.map((e) => (
           <Link key={e.id} href={`/outreach?tab=${cur[0]}&id=${e.id}`} className={"item" + (e.id === sel.id ? " on" : "")}>
             <b>{e.lead_name}</b><small>{e.lead_org}</small><small>{e.subject}</small>
-            <span className="meta"><span className={"pill " + tone(e.status)}>{label(e.status)}</span><small style={{ flex: "none" }}>{e.kind === "initial" ? "first email" : "follow-up"}</small></span>
+            <span className="meta"><span className={"pill " + tone(e.status)}>{label(e.status)}</span><small style={{ flex: "none" }}>{e.kind === "initial" ? "first email" : e.kind === "reply" ? "reply" : "follow-up"}</small></span>
           </Link>))}
       </nav>
       <form key={sel.id} action={saveEmail} className="editor">
